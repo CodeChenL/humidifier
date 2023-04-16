@@ -23,9 +23,9 @@ Adafruit_ST7735 tft = Adafruit_ST7735(TFT_CS, TFT_DC, TFT_MOSI, TFT_SCLK, TFT_RS
 
 OneButton lkey(8,true,true);
 OneButton ukey(9,true,true);
-OneButton ckey(4,true,true);
+OneButton ckey(19,true,true);
 OneButton rkey(13,true,true);
-OneButton dkey(5,true,true);
+OneButton dkey(18,true,true);
 
 void click(const char w[]){
   if(xSemaphoreTake(xMutextft,50)==pdPASS){
@@ -107,9 +107,9 @@ void setup(void) {
   pinMode(12,OUTPUT);
   pinMode(8,INPUT_PULLUP);
   pinMode(13,INPUT_PULLUP);
-  pinMode(4,INPUT_PULLUP);
+  pinMode(19,INPUT_PULLUP);
   pinMode(9,INPUT_PULLUP);
-  pinMode(5,INPUT_PULLUP);
+  pinMode(18,INPUT_PULLUP);
 
   lkey.attachClick([]() {click("lclick");});
   rkey.attachClick([]() {click("rclick");});
@@ -124,7 +124,7 @@ void setup(void) {
     while (1) delay(10);
   }
   Serial.println("AHT10 or AHT20 found");
-
+  delay(1000);
   xTaskCreate(srceen_task,"srceen_task",1024*8,NULL,1,&taskhandle_srceen);
   xTaskCreate(button_task,"button_task",1024*8,NULL,1,&taskhandle_button);
   xTaskCreate(blink_task,"blink_task",1024,NULL,1,&taskhandle_blink);
