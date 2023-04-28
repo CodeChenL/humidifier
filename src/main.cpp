@@ -47,6 +47,14 @@ void click(const char w[]){
     tft.println("C");
     tft.print(humidity.relative_humidity);
     tft.println("%");
+    if ((humidity.relative_humidity<=70 || temp.temperature>=26) && humidity.relative_humidity<=90){
+      Serial.println("ON");
+      digitalWrite(0,LOW);
+    }else{
+      Serial.println("OFF");
+      digitalWrite(0,HIGH);
+    }
+    
     Serial.println(w);
     xSemaphoreGive(xMutextft);
   }
@@ -82,13 +90,14 @@ void blink_task(void *pt){
   TickType_t xlwt_blink=xTaskGetTickCount();
   while (true)
   {
-    while(true){
-      digitalWrite(12,0);
-      vTaskDelay(9);
-      digitalWrite(12,1);
-      vTaskDelay(1);
+    static int duty = 0;
+    static int step = 1;
+    ledcWrite(0, duty);
+    duty += step;
+    if (abs(duty - 0) >= 10|| duty<=0) {
+      step = -step;
     }
-    vTaskDelayUntil(&xlwt_blink,10);
+    vTaskDelayUntil(&xlwt_blink,100);
   }
 }
 
@@ -104,7 +113,11 @@ void setup(void) {
   Serial.println(F("Initialized"));
   tft.fillScreen(ST77XX_BLACK);
 
+  pinMode(0,OUTPUT);
+  digitalWrite(0,HIGH);
   pinMode(12,OUTPUT);
+  ledcSetup(0, 5000, 12);
+  ledcAttachPin(12, 0);
   pinMode(8,INPUT_PULLUP);
   pinMode(13,INPUT_PULLUP);
   pinMode(19,INPUT_PULLUP);
