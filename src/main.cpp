@@ -47,11 +47,13 @@ void click(const char w[]){
     tft.println("C");
     tft.print(humidity.relative_humidity);
     tft.println("%");
-    if ((humidity.relative_humidity<=70 || temp.temperature>=26) && humidity.relative_humidity<=90){
+    if ((humidity.relative_humidity<=60 || temp.temperature>=28) && humidity.relative_humidity<=90){
       Serial.println("ON");
+      tft.println("ON");
       digitalWrite(0,LOW);
     }else{
       Serial.println("OFF");
+      tft.println("OFF");
       digitalWrite(0,HIGH);
     }
     
